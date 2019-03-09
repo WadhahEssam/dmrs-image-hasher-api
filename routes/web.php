@@ -12,27 +12,17 @@
 */
 use Illuminate\Http\Request;
 
-Route::post('/test', function (Request $request) {
-    if ($request->hasFile('image')) {
-
-        $image = $request->file('image');
-        $name = time().'.'.$image->getClientOriginalExtension();
-        $destinationPath = storage_path('/public/images');
-        $image->move($destinationPath, $name);
-
-        return response()->json(['data'=>"image is uploaded"]);
-    } else {
-        return 0;
-    }
-
-    exit();
+Route::post('/upload', function (Request $request) {
+    // i disabled csrf in order for the post to run from anywhere
+    $validator = Validator::make($request->all(), [
+        'file'=>'required|image|mimes:jpeg,png,jpg,pmp|max:100000'
+    ])->validate();
     
+    $file = $request->file('file');
+    $file_name = generateRandomString().'.'.$file->getClientOriginalExtension().'';
+    Storage::disk('public')->putFileAs('files', $file, $file_name);
 
-    return 'looks good';
-    $file_name = generateRandomString();
-    $content = $request->input('content');
-    Storage::disk('public')->put($file_name.'.txt', $content);
-    return $file_name;
+    return response()->json(['hash'=>$file_name]);
 });
 
 function generateRandomString($length = 10) {
