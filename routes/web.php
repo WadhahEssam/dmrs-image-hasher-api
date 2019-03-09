@@ -12,6 +12,10 @@
 */
 use Illuminate\Http\Request;
 
+Route::get('/', function (Request $request) {
+    return 'upload images to /upload by posting them and putting them into a file attributte';
+});
+
 Route::post('/upload', function (Request $request) {
     // i disabled csrf in order for the post to run from anywhere
     $validator = Validator::make($request->all(), [
