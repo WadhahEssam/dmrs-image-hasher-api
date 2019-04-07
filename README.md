@@ -4,6 +4,7 @@ api used to hash and store images and returning their hash
 ## how to install it
 ```
 composer install
+php artisan key:generate
 php artisan storage:link
 php artisan serve
 ```
