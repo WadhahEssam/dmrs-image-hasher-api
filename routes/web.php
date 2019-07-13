@@ -18,15 +18,12 @@ Route::get('/', function (Request $request) {
 
 Route::post('/upload', function (Request $request) {
     Log::info('This is some useful information.');
-    // i disabled csrf in order for the post to run from anywhere
     $validator = Validator::make($request->all(), [
         'file'=>'required|image|mimes:jpeg,png,jpg,pmp|max:100000'
     ])->validate();
-    
     $hash = hash_file ('md5', $request->file);
     $file = $request->file('file');
     $file_name = $hash.'.'.$file->getClientOriginalExtension();
     Storage::disk('public')->putFileAs('files', $file, $file_name);
-
     return response()->json(['hash'=>$file_name]);
 });
